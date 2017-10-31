@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://java.sun.com/jsf/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css">
+
+</head>
+<body>
+<div id="showshoptop" class="navbar navbar-default navbar-fixed-top bg-info ">
+
+    <button id="deleteshop" class="btn btn-primary" data-target="#mymodal2" data-toggle="modal"
+            style="margin-top: 8px;"><span
+            class="glyphicon glyphicon-minus "></span> 删除门店
+    </button>
+
+</div>
+
+<table class="table  table-striped table-hover table-condensed" style="margin-top: 50px;">
+
+    <thead style="background-color: #90ee90">
+    <tr>
+        <th class="text-center">复选框</th>
+        <th style="display:none;" class="text-center">店铺id</th>
+        <th class="text-center">店铺logo</th>
+        <th class="text-center">店名</th>
+        <th class="text-center">类型</th>
+        <th class="text-center">店老板</th>
+        <th class="text-center">电话号码</th>
+        <th class="text-center">邮箱</th>
+        <th class="text-center">门店地址</th>
+        <th class="text-center">操作</th>
+    </tr>
+    </thead>
+
+    <tbody class="text-center" id="shoptbody">
+
+
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="mymodal2">
+
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"> 删除门店</h4>
+
+            </div>
+            <div class="modal-body">
+
+
+                <h4 id="bodytext"> 确定删除吗？？？</h4>
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="confirmdel" class=" btn  btn-primary">确定</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="mymodal3">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"> 修改店铺资料</h4>
+            </div>
+            <div class="modal-body">
+
+
+                <form class="form-horizontal">
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label">店铺id：</label>
+                        <div class="col-sm-10">
+                            <label id="shopid_modal"></label>
+
+                        </div>
+                    </div>
+
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label">店铺名称：</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="shopname_modal" name="shopname_modal" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label"> 店铺类型：</label>
+
+                        <div class="col-sm-10">
+                            <select id="typeselect_modal" name="typeselect_modal" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label"> 电话号码：</label>
+
+                        <div class="col-sm-10">
+                            <input id="shoptel_modal" name="shoptel_modal" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label"> 店铺邮件：</label>
+
+                        <div class="col-sm-10">
+                            <input id="shopemail_modal" name="shopemail_modal" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label"> 店铺详细地址：</label>
+
+                        <div class="col-sm-10">
+                            <input id="shopaddress_modal" name="shopaddress_modal" type="text" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class=" form-group">
+
+                        <label class="col-sm-2 control-label"> 店铺Logo：</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="file_modal" name="file_modal" onchange="filechange(event);">
+                            <img src="../images/malatang.png" style="width: 100px;" class="img-thumbnail"
+                                 id="img_change_modal">
+                        </div>
+                    </div>
+
+                    <!--<div class=" form-group">-->
+
+                        <!--<label class="col-sm-2 control-label"> 店铺介绍：</label>-->
+
+                        <!--<div class="col-sm-10">-->
+                 <!--<textarea id="shopdetail_modal" name="shopdetail_modal" type="text" class="form-control" rows="2">-->
+                   <!--</textarea>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="confirm_modal" class=" btn  btn-primary">确定</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../js/jquery/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../js/jquery/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../js/adminjs/showshop.js"></script>
+
+</body>
+</html>

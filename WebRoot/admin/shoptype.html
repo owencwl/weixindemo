@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css">
+
+    <style>
+
+        body {
+            margin-top: 3px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id="shoptypetop" class=" navbar navbar-default navbar-fixed-top bg-info ">
+
+
+    <button id="addtype" class="btn btn-primary" data-toggle="modal" data-target="#mymodal"
+            style="margin-top: 8px;">
+        <span class="glyphicon glyphicon-plus "></span>添加类别
+    </button>
+
+    <button id="deletetype" class="btn btn-primary" data-target="#mymodal2" data-toggle="modal"
+            style="margin-top: 8px;"><span
+            class="glyphicon glyphicon-minus "></span> 删除类别
+    </button>
+
+</div>
+
+
+<table class="table  table-striped table-hover table-condensed" style="margin-top: 50px;">
+
+    <thead style="background-color: #90ee90" >
+    <tr>
+
+        <th class="text-center">复选框</th>
+        <th class="text-center">类型id</th>
+        <th class="text-center">门店类型</th>
+    </tr>
+    </thead>
+    <tbody class="text-center" id="shoptypeTbody" >
+
+
+    </tbody>
+</table>
+
+<div class="modal fade" id="mymodal">
+
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"> 添加类别</h4>
+
+            </div>
+            <div class="modal-body">
+
+                <div class="input-group">
+
+                    <label>请输入类别名称：</label>
+                    <input id="typename" class="form-control" type="text">
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="submitType" type="submit" class=" btn  btn-primary">确定添加</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="mymodal2">
+
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"> 删除类别</h4>
+
+            </div>
+            <div class="modal-body">
+
+
+                <h4 id="bodytext"> 确定删除吗？？？</h4>
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="confirmdel" type="submit" class=" btn  btn-primary">确定</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../js/jquery/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../js/adminjs/shoptype.js"></script>
+</body>
+</html>

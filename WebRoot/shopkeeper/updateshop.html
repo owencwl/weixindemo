@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css">
+</head>
+
+
+<body>
+
+<div  style="margin-top: 20px; width: 80%;">
+
+    <form class="form-horizontal" >
+
+
+
+
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 电话号码：</label>
+
+            <div class="col-sm-10">
+                <input id="shoptel" name="shoptel" type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 店铺邮件：</label>
+
+            <div class="col-sm-10">
+                <input id="shopemail" name="shopemail" type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 店铺详细地址：</label>
+
+            <div class="col-sm-10">
+                <input id="shopaddress" name="shopaddress" type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 店铺介绍：</label>
+
+            <div class="col-sm-10">
+                <textarea id="shopdetail" name="shopdetail" type="text" class="form-control" rows="3">
+                </textarea>
+            </div>
+        </div>
+
+
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 店铺公告：</label>
+
+            <div class="col-sm-10">
+                <textarea id="shopnotice" name="shopnotice" type="text" class="form-control" rows="3">
+                </textarea>
+            </div>
+        </div>
+
+
+        <div class=" form-group">
+
+            <label class="col-sm-2 control-label"> 店铺Logo：</label>
+            <div class="col-sm-10">
+                <input type="file" id="file" name="file" onchange="filechange(event);">
+                <img src="../images/openimg.png" style="width: 100px;" class="img-thumbnail" id="img-change" >
+            </div>
+        </div>
+
+
+
+    </form>
+
+    <div class="col-sm-2"></div>
+
+    <div class="col-sm-10">
+
+        <button id="addshopbtn" class="btn btn-primary btn-lg" > 保存</button>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="../js/jquery/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+
+<script type="text/javascript" src="../js/jquery/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../js/shopkeeperjs/updateshop.js"></script>
+</body>
+</html>

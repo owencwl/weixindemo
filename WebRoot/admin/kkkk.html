@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../css/admincss.css">
+    <title>Title</title>
+
+</head>
+<body>
+<div class="container">
+<nav class="navbar navbar-default  ">
+
+    <ul class="nav navbar-nav navbar-right ">
+
+
+        <li><a class="dropdown-toggle " href="#" ><i class="fa fa-question"></i>帮助中心</a></li>
+
+
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" aria-expanded="true">admin
+                <span
+                        class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="javascript:void(0)" onclick="select('/site/WebSite/SettingAccount')">管理账号</a></li>
+                <li><a href="javascript:void(0)" onclick="select('/site/WebSite/Index')">修改密码</a></li>
+                <li><a href="javascript:void(0)" onclick="select('/site/Auth/EditAuthInfoPage')">修改资料</a></li>
+                <li class="divider"></li>
+
+                <li><a id="logOutLink" onclick="javascript: setHashCookie('hash', ''); clearLoginInfo();"
+                       href="/site/Register/Logout">退出</a></li>
+
+            </ul>
+        </li>
+    </ul>
+
+</nav>
+
+
+        <div class="row">
+            <div class="col-md-2">
+                <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+                    <li class="active">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-th-large"></i>
+                            首页
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-credit-card"></i>
+                            门店管理
+                        </a>
+
+                        <ul id="fff" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                            <li><a  ><i class="glyphicon glyphicon-user"></i>用户管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-th-list"></i>菜单管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-asterisk"></i>角色管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-edit"></i>修改密码</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>日志查看</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-globe"></i>
+                            公众号管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            系统管理
+                            <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                            <li><a  href="javascript:void(0)" onclick="shop()"><i class="glyphicon glyphicon-user"></i>用户管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-th-list"></i>菜单管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-asterisk"></i>角色管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-edit"></i>修改密码</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>日志查看</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-fire"></i>
+                            关于系统
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <div id="maincontent" class="col-md-10">
+                主窗口
+            </div>
+        </div>
+    <div> <h4>&copy;</h4></div>
+
+</div>
+
+
+
+
+<script>
+
+    function shop() {
+
+        $.ajax(
+            {
+                url:'shopinfo.html',
+                type:'get',
+                datatype:'html',
+                success:function (msg) {
+
+                    alert("异步提交成功！！！！");
+
+                    $("#maincontent").html(msg);
+
+                },
+                error:function (msg) {
+
+                    alert("异步提交error");
+
+                }
+            }
+
+        );
+    };
+
+
+</script>
+
+
+
+<script type="text/javascript" src="../js/jquery/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../js/bootstrap/bootstrap.js"></script>
+</body>
+</html>

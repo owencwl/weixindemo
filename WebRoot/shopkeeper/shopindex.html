@@ -1,0 +1,1131 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>我点餐管理后台 -我点餐管理后台</title>
+    <link href="/site/base/css/form?v=NSH0NDhYY5vVnQ31jGg1BcUG22BsUVxfh-ldRRnFh7E1" rel="stylesheet"/>
+
+    <link href="/site/Content/KindEditor/css?v=WX3cKgj3wrrAZgyeYSgT8LUkfBpOc5MlkaySvul2LL41" rel="stylesheet"/>
+
+    <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=UDUBZ-LRE3W-VIQRG-OHFC6-QOTSH-FJBI2"></script>
+    <link href="/site/Content/KindEditor/themes/default/default.css" rel="stylesheet" />
+    <link href="/site/datetimepicker/css?v=zWj2chOh6pzghvG41pgW8SmcmHnZloBKUEhegNtC4qk1" rel="stylesheet"/>
+
+    <link href="/site/Content/wdc/css/plugins/icheck/all.css" rel="stylesheet" />
+    <script src="/site/Content/laypage-v1.3/laypage/laypage.js"></script>
+    <link href="/site/Content/wdc/css/plugins/morris.css" rel="stylesheet" />
+    <link href="/site/Content/wdc/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/site/Content/wdc/test/kkpager_blue.css" rel="stylesheet" />
+    <link href="/site/Content/wdc/css/sb-admin-2.css" rel="stylesheet" />
+    <link href="/site/Content/css/iconfont.css" rel="stylesheet" />
+    <script src="/site/base/js/form?v=_XqwT1tdE0JSA1eHOm-qkpZKG5zoEoTANjqYypQKT5I1"></script>
+<script src="/site/map/js?v=wTfCcX841llUwxinAFFPkh8u0pryAnEPgy1T5NpxjAU1"></script>
+
+    <script src="/site/datetimepicker/js?v=J2V0YQEXFpgUn_9ALXtlhqgRmIjhlGouDrRYztOj-YM1"></script>
+
+    
+    <script src="/site/Content/wdc/js/qrcode.js"></script>
+    <script type="text/javascript" src="/site/Content/layer/layer.js"></script>
+    <script type="text/javascript" src="/site/Content/layer/extend/layer.ext.js"></script>
+    <script src="/site/Content/echarts/dist/echarts.js"></script>
+    <script src="/site/Content/ZeroClipboard/ZeroClipboard.js"></script>
+    <script src="/site/Content/js/json2.js"></script>
+    <script src="/site/Content/KindEditor/kindeditor-min.js"></script>
+    <script src="/site/Content/KindEditor/js?v=yUDW5tZRH5vDHiEQjlm2CFD5MMKTC3AKd45ZeCbahc41"></script>
+
+    <script src="/site/Content/wdc/js/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="/site/Content/wdc/js/sb-admin-2.js"></script>
+    <script src="/site/Content/wdc/test/kkpager.min.js"></script>
+    <script>
+        var intID;
+        $(function () {
+            //setHashCookie('hash', window.location.hash);
+            getHashFlag();
+            clearInterval(intID);
+        });
+        function select(url, e) {
+            clearInterval(intID);
+            //$("#page-wrapper").attr("src", url);
+            $("#side-menu a.selected").removeClass("selected");
+            $(e).addClass("selected");
+            setHashCookie('hash', url);
+            jsload(url);
+        }
+
+        function setHashCookie(name, value) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() + 20 * 60 * 1000);
+            if (value && (value.indexOf('#') == 0 || value.indexOf('/') == 0)) {
+                var tmp = value.substring(1);
+                var s = tmp.indexOf('site/');
+                // site/Menu/MenuList
+                if (s == 0) {
+                    tmp = tmp.substring(s + 5);
+                }
+                window.location.hash = tmp;
+                document.cookie = name + "=" + tmp + ";expires=" + exp.toGMTString();
+            } else {
+                document.cookie = name + "=;expires=" + exp.toGMTString();
+            }
+        }
+
+        function getHashFlag() {
+            var hash = window.location.hash;
+            var reStr = hash.replace('#', 'nav_').replace('/', '_').substr(0).toLowerCase();
+            $('#side-menu > li > ul').removeClass('in');
+            $('#side-menu a[data-nav]').removeClass('selected');
+
+            $('#side-menu > li > ul > li > a[data-nav="' + reStr + '"]').addClass('selected');
+            $('#side-menu > li > ul > li > a[data-nav="' + reStr + '"]').parent().parent().addClass('in');
+            $('#side-menu > li > a[data-nav="' + reStr + '"]').addClass('selected');
+        }
+
+        function ab() {
+            var str = window.location.hash;
+            return str.replace('#', 'nav_').replace('/', '_').substr(0).toLowerCase();
+        }
+
+        function jsload(url) {
+            // 页面网速过慢或者服务器未及时返回，加载超过300ms出现加载loading提示
+            var index = null;
+            var t = setTimeout(function () {
+                index = layer.load('加载中', {
+                    icon: 16,
+                    shade: [0.2, '#000']
+                });
+            }, 300);
+            setTimeout(function () {
+                index && layer.close(index);
+                t && clearTimeout(t);
+            }, 5000);
+            $("[id*='ZeroClipboardMovie_']").each(function () { $(this).parent().remove() });
+            $("#content").load(url, function (e) {
+                index && layer.close(index);
+                t && clearTimeout(t);
+                if (e === '') {
+                    layer.msg("哟~ 好像网络有问题");
+                }
+            });
+        }
+        function AmountInterval(objVal) {
+            var deferred = $.Deferred();
+            if (objVal != "") {
+                var retVal = 0;
+                $.ajax({
+                    url: '/site/ajax/AmountHandler.ashx?n=' + objVal,
+                    data: {},
+                    type: 'get',
+                    contentType: 'json',
+                }).done(function (dataMsg) {
+                    deferred.resolve(dataMsg);
+                }).fail(function () {
+                    deferred.reject("服务器错误");
+                });
+            }
+            return deferred.promise();
+        }
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?dfc4adacdbf3ee29aeb8b6155bce5932";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        $(function () {
+            var t = "";
+            if ("1" == "0") {
+                t = "http://m.wodiancan.net/phone/Index?s=0&m=" + "52352" + "&om=" + "52352" + "&a=" + "52097";
+            } else {
+                t = "http://m.wodiancan.net/phone/Index?s=0&m=" + "52352" + "&a=" + "52097";
+            }
+
+            var image = document.getElementById('qrcodeLayout');
+            image.src = '/site/Ajax/QrCodeHandler.ashx?e=M&q=Two&s=8&t=' + escape(t);
+            image.alt = image.title = t;
+            $("#btnDownQRCodeLayout").attr("href", image.src);
+        });
+    </script>
+</head>
+<body class="body">
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+
+        <ul class="navbar-top-links">
+            
+            
+            <li class="dropdown" style="display: none;">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">切换语言 <i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="/site/WebSite/NewIndex?l=en-US">英语</a></li>
+                    <li><a href="/site/WebSite/NewIndex">中文</a></li>
+                </ul>
+            </li>
+            <li><a class="dropdown-toggle " href="http://help.wodiancan.net/" target="_blank"><i class="fa fa-question"></i>帮助中心</a></li>
+            <li class="nav-help-tips">
+                <i class="fa fa-qrcode fa-fw "></i>下单二维码
+                <div class="help-tips-box">
+                    <h3>下单二维码</h3>
+                    <img id="qrcodeLayout" src="" />
+                    <a href="javascript:void(0)" id="btnDownQRCodeLayout" class="btn btn-primary" download="QRCode.png">下载二维码</a>
+                </div>
+            </li>
+            <li>
+                    <a href="javascript:void(0)" onclick="select('/site/website/settingaccount')">
+                        <i class="fa fa-user fa-fw">
+                        </i>数字ID：52352
+                    </a>
+            </li>
+            
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="fa fa-user fa-fw"></i>admin <i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu dropdown-user">
+                        <li><a href="javascript:void(0)" onclick="select('/site/WebSite/SettingAccount')"><i class="fa fa-user fa-fw"></i>管理账号</a></li>
+                    <li><a href="javascript:void(0)" onclick="select('/site/WebSite/Index')"><i class="fa fa-gear fa-fw"></i>修改密码</a></li>
+                    <li><a href="javascript:void(0)" onclick="select('/site/Auth/EditAuthInfoPage')"><i class="fa fa-wrench fa-fw"></i>修改资料</a></li>
+                    <li class="divider"></li>
+
+                    <li><a id="logOutLink" onclick="javascript: setHashCookie('hash', ''); clearLoginInfo();" href="/site/Register/Logout"><i class="fa fa-power-off  fa-fw"></i>退出</a></li>
+
+                </ul>
+            </li>
+        </ul>
+
+
+
+    </nav>
+
+    <div class="IndexAlert">
+            <div class="center-block">
+                您还没有完成商户认证，我点餐已经与WIFI万能钥匙进行对接，通过WIFI万能钥匙平台，旨在更好地推广您的店铺，为您的店铺提供更多的互联网入口，以便在互联网上各大平台上更好地进行宣传和营销，后续还会接入更多的第三方平台，敬请您的期待！
+                    <a href="javascript:void(0)" onclick="select('/site/Auth/Index')" class="btn btn-primary">立即认证</a>
+            </div>
+
+                <div class="center-block">
+                    您的账户已经过期，为了不影响您的正常使用，请及时续期！
+                    <a href="javascript:void(0)" class="btn btn-primary" onclick="select('/site/Auth/ManagerRenewApply')">立即续期</a>
+                </div>
+    </div>
+
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="LogoWrap">
+            <a href="/site/WebSite/NewIndex" class="logo"></a>
+                <p>您自己的点餐平台</p>
+        </div>
+        <div class="sidebar-nav">
+            <ul class="nav left-nav" id="side-menu">
+                    <li>
+                        <a onclick="select('/site/Order/OrderManagement', this)" data-nav="nav_order_ordermanagement" href="javascript:void(0)"><i class="fa fa-list-alt"></i>订单管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse in">
+                            <li><a id="LinkToMenu" onclick="select('/site/Order/OrderManagement?id=1', this)" data-nav="nav_order_ordermanagement?id=1" href="javascript:void(0)">待发货</a></li>
+                            
+                            <li><a onclick="select('/site/Order/OrderManagement?id=2', this)" data-nav="nav_order_ordermanagement?id=2" href="javascript:void(0)">已发货</a></li>
+                            
+                            <li><a onclick="select('/site/Order/OrderManagement?id=4', this)" data-nav="nav_order_ordermanagement?id=4" href="javascript:void(0)">已完成</a></li>
+                                <li><a onclick="select('/site/Comment/Index', this) " data-nav="nav_comment_index" href="javascript:void(0)">订单评论</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li><a id="LinkToStore" onclick="select('/site/storemanagement/storelist', this) " data-nav="nav_storemanagement_storelist" href="javascript:void(0)"><i class="fa fa-sitemap fa-fw"></i>门店管理</a></li>
+                                    <li>
+                        <a><i class="fa fa-star fa-fw"></i>菜品管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a id="LinkToMenu" onclick="select('/site/Menu/Menu', this)" data-nav="nav_menu_menu" href="javascript:void(0)">所有菜品</a></li>
+                            <li><a onclick="select('/site/Menu/Attribute', this)" data-nav="nav_menu_attribute" href="javascript:void(0)">菜品属性</a></li>
+                            <li><a onclick="select('/site/Menu/MenuList', this)" data-nav="nav_menu_menulist" href="javascript:void(0)">菜品分类</a></li>
+                            <li><a onclick="select('/site/Menu/MenuPackage', this)" data-nav="nav_menu_menupackage" href="javascript:void(0)">所有套餐</a></li>
+                            <li><a ondragend="select('/site/Menu/GetThirdPartyMenu', this)" data-nav="nav_menu_getthirdpartymenu" href="javascript:void(0)">导入第三方平台菜品</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a><i class="fa fa-tags"></i>活动管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a onclick="select('/site/Activity/Index', this)" data-nav="nav_activity_index" href="javascript:void(0)">活动管理</a>
+                            </li>
+                            <li>
+                                <a onclick="select('/site/Activity/ActivityApplyPage', this)" href="javascript:void(0)">我要申请</a>
+                            </li>
+                            <li>
+                                <a onclick="select('/site/Activity/MessagesPage', this)" data-nav="nav_activity_messagespage" href="javascript:void(0)">留言设置</a>
+                            </li>
+                        </ul>
+                    </li>
+                                    <li>
+                        <a><i class="fa fa-sort-amount-asc fa-fw"></i>推广中心<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                                <li>
+                                    <a onclick="select('/site/Business/DataExtend', this)" data-nav="nav_business_dataextend" href="javascript:void(0);">
+                                        全民推广统计
+                                    </a>
+                                </li>
+                                <li>
+                                    <a onclick="select('/site/Business/SpreadInfo', this)" data-nav="nav_business_spreadinfo" href="javascript:void(0);">
+                                        第三方推广信息
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                                    <li>
+                        <a><i class="fa fa-bookmark"></i>折扣优惠促销<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <!-- 折扣优惠相关菜单 -->
+                            <li><a onclick="select('/site/Member/MemberDiscountManagement?dc=0', this)" data-nav="nav_member_memberdiscountmanagement?dc=0" href=" javascript:void(0);">(店铺)折扣活动</a></li>
+                        </ul>
+                    </li>
+                                    <li>
+                        <a><i class="fa fa-credit-card fa-fw"></i>会员<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <!-- 会员相关菜单 -->
+                            <li>
+                                <a onclick="select('/site/Member/MemberRuleManagement', this)" data-nav="nav_member_memberrulemanagement" href=" javascript:void(0);">
+                                    设置积分/成长值
+                                </a>
+                            </li>
+                            <li><a onclick="select('/site/Member/MemberDiscountManagement?dc=1', this)" data-nav="nav_member_memberdiscountmanagement?dc=1" href=" javascript:void(0);">(会员)折扣活动</a></li>
+                            <li><a onclick="select('/site/Member/MemberTypeManagement', this)" data-nav="nav_member_membertypemanagement" href=" javascript:void(0);">会员类型</a></li>
+                            <li><a onclick="select('/site/Member/MemberManagement', this)" data-nav="nav_member_membermanagement" href=" javascript:void(0);">会员信息</a></li>
+                            <li>
+                                <a onclick="select('/site/Member/MemberTradingManagement', this)" data-nav="nav_member_membertradingmanagement" href=" javascript:void(0);">
+                                    充值/消费记录
+
+                                </a>
+                            </li>
+                            <!--<li><a onclick="select('/site/Member/IntegralSet', this)" data-nav="nav_member_integralset" href=" javascript:void(0);">积分设置</a></li>-->
+                            <!--<li><a onclick="select('/site/Member/MemberManage', this)" data-nav="nav_member_integralset" href=" javascript:void(0);">粉丝管理</a></li>-->
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-ticket"></i>优惠券<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <!-- 优惠券相关菜单 -->
+                            <li><a onclick="select('/site/Member/MemberCouponManagement', this)" data-nav="nav_member_membercouponmanagement" href=" javascript:void(0);">优惠券管理</a></li>
+                            <li><a onclick="select('/site/Member/MemberCouponDetailManagement', this)" data-nav="nav_member_membercoupondetailmanagement" href=" javascript:void(0);">优惠券明细</a></li>
+                            <li><a onclick="select('/site/Member/MemberCouponReceiveRecordManagement', this)" data-nav="nav_member_membercouponreceiverecordmanagement" href=" javascript:void(0);">领取记录</a></li>
+                            <li><a onclick="select('/site/Member/MemberCouponConsumeRecordManagement', this)" data-nav="nav_member_membercouponconsumerecordmanagement" href=" javascript:void(0);">核销记录</a></li>
+                        </ul>
+                    </li>
+
+                    <li style="display:none;">
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>数据分析<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                                <li><a onclick="select('/site/Statistics/DataFood', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">菜品统计</a></li>
+                                                            <li><a onclick="select('/site/Statistics/DataOrder', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">营业统计</a></li>
+                        </ul>
+                    </li>
+                                    <li>
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>微信数据分析<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                                <li><a onclick="select('/site/WeChatAnalysis/StoreDetailed', this)" data-nav="nav_wechatanalysis_storedetailed" href="javascript:void(0);">微信支付明细</a></li>
+                                                            <li><a onclick="select('/site/WeChatAnalysis/StoreSummary', this)" data-nav="nav_wechatanalysis_storesummary" href="javascript:void(0);">微信支付汇总</a></li>
+                                                            <li><a onclick="select('/site/WeChatAnalysis/DrawAmount', this)" data-nav="nav_wechatanalysis_drawamount" href="javascript:void(0);">微信结算查询</a></li>
+                                                            <li><a onclick="select('/site/InnerWeChatAnalysis/DrawAmount', this)" data-nav="nav_innerwechatanalysis_drawamount" href="javascript:void(0);">微信结算查询(新)</a></li>
+                        </ul>
+                    </li>
+                                    <li style="display:none;">
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>支付宝数据分析<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                                <li><a onclick="select('/site/InnerAliAnalysis/DrawAmount', this)" data-nav="nav_inneralianalysis_drawamount" href="javascript:void(0);">支付宝结算查询(新)</a></li>
+                        </ul>
+                    </li>
+
+                    <li style="display:none;">
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>微信结算分析<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a onclick="select('/site/WeChatBalance/ApproveSettlement', this) " data-nav="nav_wechatbalance_approvesettlement" href="javascript:void(0);">微信交易审核</a></li>
+                            <li><a onclick="select('/site/WeChatBalance/PendingSettlement', this) " data-nav="nav_wechatbalance_pendingsettlement" href="javascript:void(0);">微信审核查询</a></li>
+                            <li><a onclick="select('/site/WeChatBalance/DrawAmount', this) " data-nav="nav_wechatbalance_drawamount" href="javascript:void(0);">微信结算查询</a></li>
+                        </ul>
+                    </li>
+                                    <li style="display:none;">
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>支付宝结算分析<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            
+                            <li><a onclick="select('/site /&gt;AliBalance/ApproveSettlement', this) " data-nav="nav_alibalance_approvesettlement" href="javascript:void(0);">支付宝交易审核</a></li>
+                            <li><a onclick="select('/site /&gt;AliBalance/PendingSettlement', this) " data-nav="nav_alibalance_pendingsettlement" href="javascript:void(0);">支付宝审核查询</a></li>
+                            <li><a onclick="select('/site /&gt;AliBalance/DrawAmount', this) " data-nav="nav_alibalance_drawamount" href="javascript:void(0);">支付宝结算查询</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a><i class="fa fa-bar-chart-o fa-fw"></i>数据统计<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+
+                                    <li><a onclick="select('/site/orderBusinessStatistics/OrderStatistics', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">营业统计</a></li>
+                                                                                                                        <li><a onclick="select('/site/PaymentStatistics/PaymentDetailStatistics', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">支付统计</a></li>
+                                                                <li><a onclick="select('/site/Card/Info', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">会员卡统计</a></li>
+
+                        </ul>
+
+                    </li>
+                        <li style="display:none;">
+                            <a><i class="fa fa-bar-chart-o fa-fw"></i>菜品营业统计<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                    <li><a onclick="select('/site/foodBusiness/foodSalesCollect', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">菜品营业汇总</a></li>
+                                                                    <li><a onclick="select('/site/foodBusiness/foodSalesClassifyCollect', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">菜品营业分类汇总</a></li>
+                            </ul>
+                        </li>
+                                            <li style="display:none;">
+                            <a><i class="fa fa-bar-chart-o fa-fw"></i>营业统计<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                    <li><a onclick="select('/site/orderBusinessStatistics/OrderStatistics', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">订单营业统计</a></li>
+                                                                    <li><a onclick="select('/site/orderBusinessStatistics/businessSegmentsStatistics', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">营业分时段统计</a></li>
+                                                                    <li><a onclick="select('/site/orderBusinessStatistics/businessHoursStatistics', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">营业分餐段统计</a></li>
+                                                                    <li><a onclick="select('/site/orderBusinessStatistics/turnTableStatistics', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">桌台翻台统计(堂吃)</a></li>
+                            </ul>
+                        </li>
+                                            <li style="display:none;">
+                            <a><i class="fa fa-bar-chart-o fa-fw"></i>账单统计<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                    <li><a onclick="select('/site/BillStatistics/billDetail', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">账单明细</a></li>
+                                                                    <li><a onclick="select('/site/BillStatistics/billSummary', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">账单汇总</a></li>
+                            </ul>
+                        </li>
+                                            <li style="display:none;">
+                            <a><i class="fa fa-bar-chart-o fa-fw"></i>支付统计<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                    <li><a onclick="select('/site/PaymentStatistics/PaymentDetail', this)" data-nav="nav_statistics_datafood" href="javascript:void(0);">支付明细</a></li>
+                                                                    <li><a onclick="select('/site/PaymentStatistics/PaymentDetailStatistics', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">支付明细统计</a></li>
+                                                                    <li><a onclick="select('/site/PaymentStatistics/WeChatPaymentDetails', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">微信支付明细</a></li>
+                                                                    <li><a onclick="select('/site/PaymentStatistics/AlipayPaymentDetails', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">支付宝支付明细</a></li>
+                                    <li><a onclick="select('/site/PaymentStatistics/WeChatPaymentSummary', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">微信支付汇总</a></li>
+                                                                    <li><a onclick="select('/site/PaymentStatistics/AlipaymentSummary', this) " data-nav=" nav_statistics_dataorder" href="javascript:void(0);">支付宝支付汇总</a></li>
+                            </ul>
+                        </li>
+                                            <li>
+                            <a><i class="fa fa-qrcode fa-fw"></i>公众号管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a onclick="select('/site/BindingWeichat/BindingWeichat', this)" data-nav="nav_bindingweichat_bindingweichat" href="javascript:void(0)">微信绑定</a></li>
+                                <li><a onclick="select('/site/ReplyManagement/ReplyManagement', this)" data-nav="nav_replymanagement_replymanagement" href="javascript:void(0)">自动回复</a></li>
+                                                                                                    <li>
+                                        <a onclick="select('/site/Material/Material', this)" data-nav="nav_material_material" href="javascript:void(0)">
+                                            素材管理
+                                        </a>
+                                    </li>
+                                <li>
+                                    <a onclick="select('/site/CustomMenu/CustomMenu', this)" data-nav="nav_custommenu_custommenu" href="javascript:void(0)">
+                                        自定义菜单
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    <li>
+                        <a><i class="fa fa-cog fa-fw"></i>系统管理<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                                <li>
+                                    <a onclick="select('/site/Template/SelectTemplatePage', this) " data-nav="nav_template_selecttemplatepage" href="javascript:void(0);">
+                                        设置模板
+                                    </a>
+                                </li>
+                            <li><a onclick="select('/site/WebSite/Index', this)" data-nav="nav_website_index" href="javascript:void(0)">修改密码</a></li>
+                                <li>
+                                    <a onclick="select('/site/WebSite/SettingAccount', this)" data-nav="nav_website_settingaccount" href="javascript:void(0)">
+                                        子账号设置
+                                    </a>
+                                </li>
+                                    <li>
+                                        <a onclick="select('/site/Auth/EditAuthInfoPage', this)" data-nav="nav_auth_editAuthInfoPage" href="javascript:void(0)">
+                                            修改资料
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="select('/site/Auth/Index', this)" data-nav="nav_auth_editAuthInfoPage" href="javascript:void(0)">
+                                            商户认证
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="select('/site/Auth/MessageHistory', this)" data-nav="nav_auth_editAuthInfoPage" href="javascript:void(0)">
+                                            历史消息
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="select('/site/Auth/ManagerRenewApply', this)" data-nav="nav_auth_editAuthInfoPage" href="javascript:void(0)">
+                                            续期申请
+                                        </a>
+                                    </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+
+
+<div id="content">
+    
+
+<script>
+    $(function () {
+        UpdateClass();
+        var sg = sessionStorage.getItem("orderSession");
+        if (sg != null && sg != "undefined") {
+            sg = JSON.parse(sg);
+            GetOder(sg.curr);
+        } else {
+            GetOder(1);
+        }
+        $('[data-toggle="popover"]').popover();
+        $("#search").click(function () {
+            GetOder(1);
+        });
+
+        //导出订单详情
+        $("#ExportExcel").on("click", function (e) {
+            e.preventDefault();
+            data = { "status": $("#OrderStatus").val(), "storeid": $("#StoreID").val(), "dateRange": $("#reservation").val(), "EatType": $("#EatType").val(), "sn": $("#sn").val() };
+            var query = $.param(data);
+            window.open($(this).attr("href") + "?" + query, "_blank");
+        });
+
+        //导出菜品详情
+        $("#ExportGoodExcel").on("click", function (e) {
+            e.preventDefault();
+            data = {
+                "storeid": $("#StoreID").val(),
+                "EatType": $("#EatType").val(),
+                "sn": $("#sn").val(),
+                "dateRange": $("#reservation").val(),
+                "status": $("#OrderStatus").val()
+            };
+            var query = $.param(data);
+            window.open($(this).attr("href") + "?" + query, "_blank");
+        });
+
+        $("#page-wrapper").on("click", "[data-orderid]", function () {
+            if (confirm("确定删除订单吗？")) {
+                var data = { 'orderId': $(this).data("orderid") };
+                var a = POSTController(data, '/site/Order/DelOrderById');
+                if (a.result == 'Ok') {
+                    GetOder(pno);
+                } else {
+                    alert(a.msg);
+                }
+            }
+        });
+        $("#reprinter").on("click", function () {
+            var orderid = $("#orderId").val();
+            var list = [];
+            $("#msg_no").find("input:checked").each(function () {
+                list.push($(this).val());
+            });
+            if (confirm("您确定要重新打印订单吗？")) {
+                var data = { orderId: orderid, list: list };
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    dataType: "JSON",
+                    url: '/site/Order/RePrintOrder',
+                    success: function (msg) {
+                        var object = eval('(' + msg + ')');
+                        if (object.result == 'Ok') {
+                            alert(object.msg);
+                            //移除选中状态
+                            $("#msg_no").find("input").each(function () {
+                                $(this).iCheck('uncheck');
+                            });
+                            $('#printer').modal('toggle');
+                        } else {
+                            alert(object.msg);
+                        }
+                    }
+                });
+            }
+        });
+        $("#btnOrderAnalysis").on("click", function () {
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: '/site/Order/OrderAnalysis',
+                success: function (msg) {
+                    var object = eval('(' + msg + ')');
+                    if (object.result == 'Ok') {
+                        alert('发货分析完成！');
+                    } else {
+                        alert(object.msg);
+                    }
+                }
+            });
+        });
+    });
+
+    function RePrintOrder(orderid) {
+        $("#orderId").val(orderid);
+        $('#printer').modal('toggle');
+    }
+    function UpdateClass() {
+        var callbacksList = $('.demo-callbacks ul');
+        $('.demo-list input').on('ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed', function (event) {
+            callbacksList.prepend('<li><span>#' + this.id + '</span> is ' + event.type.replace('if', '').toLowerCase() + '</li>');
+        }).iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%'
+        });
+    }
+
+    function BindOder(status, pagindex) {
+        $("#OrderStatus").val(status);
+        GetOder(pagindex);
+    }
+
+    var pno = 1;
+    function GetOder(i) {
+        var data = {};
+        var time = $("#reservation").val();
+        if (time == "") {
+            time = ' - ';
+        }
+        var t = time.split(' - ');
+        data = { "status": $("#OrderStatus").val(), "storeid": $("#StoreID").val(), "startTime": t[0], "endTime": t[1], "EatType": $("#EatType").val(), "sn": $("#sn").val(), "pageIndex": i, "phone": $('#phone').val(), "name": $('#name').val(),"cardno":$("#cardNo").val() };
+        $.ajax({
+            type: "POST",
+            data: data,
+            dataType: "JSON",
+            url: '/site/Order/GetOrder',
+            success: function (msg) {
+                var dataObject = eval('(' + msg + ')');
+                if (dataObject.result == 'Ok') {
+                    var object = dataObject.msg;
+                    paging(object.pno, object.total, object.totalRecords);
+                    pno = object.pno;
+                    var sg = { curr: pno, status: $("#OrderStatus").val() }
+                    sessionStorage.setItem("orderSession", JSON.stringify(sg));
+                    for (var i = 0; i < object.orderList.length; i++) {
+                        object.orderList[i].order.created_at = ChangeDateFormat(object.orderList[i].order.created_at);
+                        object.orderList[i].order.preset_time = ConvertPresetTime(object.orderList[i].order.preset_time);
+                        object.orderList[i].OrderEdit = object.OrderEdit;
+                        object.orderList[i].OrderDelete = object.OrderDelete;
+                        object.orderList[i].TotalAmount = object.orderList[i].TotalAmount.toFixed(2);
+                        object.orderList[i].order.deleted_at = ChangeDateFormat(object.orderList[i].order.deleted_at);
+                        $.each(object.orderList[i].productList, function () {
+                            if (this.attribute_name != null) {
+                                var nameList = this.attribute_name.split(',');
+                                this.attribute_name = nameList;
+                            } else {
+                                this.attribute_name = [];
+                            }
+                        });
+                    }
+                    var list = { msg: object.orderList };
+                    //console.log(JSON.stringify(list));
+                    var html = template('tmpl_orders', list);
+
+                    $("#OrderListPost").html(html);
+
+                } else {
+                    alert(dataObject.msg);
+                }
+            }
+        });
+    }
+
+    function ChangeDateFormat(val) {
+        if (val != null) {
+            var date = new Date(parseInt(val.replace("/Date(", "").replace(")/", ""), 10));
+            //月份为0-11，所以+1，月份小于10时补个0
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            return date.getFullYear() + "-" + month + "-" + currentDate + ' ' + hours + ":" + minutes + ":" + seconds;
+        }
+        return "";
+    }
+
+    function ConvertPresetTime(val) {
+        if (val != null) {
+            var date = new Date(parseInt(val.replace("/Date(", "").replace(")/", ""), 10));
+            //月份为0-11，所以+1，月份小于10时补个0
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            return date.getFullYear() + "-" + month + "-" + currentDate;
+        }
+        return "";
+    }
+
+    function UpdateStatus(status, msg, orderid, up) {
+        var result = true;
+        if (msg != "") {
+            result = false;
+            if (confirm(msg)) {
+                result = true;
+            }
+        }
+        if (result) {
+            var data = { "status": status, "orderid": orderid };
+            $.ajax({
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                url: '/site/Order/UpdateStatus',
+                success: function (msg) {
+                    var object = eval('(' + msg + ')');
+                    if (object.result == 'Ok') {
+                        BindOder(up, 1);
+                        if (status == "-1") {
+                            alert("订单已取消！");
+                        } else if (status == "2") {
+                            alert("订单已发货！");
+                        } else if (status == "4") {
+                            alert("订单已完成！");
+                        } else {
+                            alert(object.msg);
+                        }
+                    } else {
+                        alert(object.msg);
+                    }
+                }
+            });
+        }
+    }
+
+    function paging(pno, total, totalRecords) {
+        //生成分页控件
+        kkpager.init({
+            pno: pno,
+            //总页码
+            total: total,
+            //总数据条数
+            totalRecords: totalRecords,
+            clickName: 'GetOder',
+            lang: {
+                prePageText: '上一页',
+                prePageTipText: '上一页',
+                nextPageText: '下一页',
+                nextPageTipText: '下一页',
+                totalPageBeforeText: '共',
+                totalPageAfterText: '页',
+                totalRecordsBeforeText: '共',
+                totalRecordsAfterText: '条数据',
+                gopageBeforeText: '转到',
+                gopageButtonOkText: '确定',
+                gopageAfterText: '页',
+                buttonTipBeforeText: '第'
+            }
+        });
+        kkpager.generPageHtml();
+    }
+
+    String.prototype.toFloat = function () {
+        return parseFloat(this);
+    }
+</script>
+<div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <h4 class="page-header">订单管理</h4>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12  col-md-12">
+                <div class="seach_tigs">
+                    <ul class="clearfix">
+                        <li>
+                            <label class="seach-label">下单门店：</label>
+
+                            <select class="form-control" id="StoreID">
+                                                                    <option value="51846">cwl火锅</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label class="seach-label">类型：</label>
+                            <select class="form-control" id="EatType">
+                                <option selected="selected" value="">--选择类型--</option>
+                                <option value="1">外卖</option>
+                                <option value="2">堂吃</option>
+                            </select>
+                        </li>
+                        <li><label class="seach-label">流水号：</label><input type="text" name="sn" id="sn" class="form-control" onkeyup="value=this.value.replace(/\D+/g,'')" maxlength="5" /></li>
+                        <li><label class="seach-label">下单时间：</label><input type="text" name="reservation" id="reservation" class="form-control" value="2017-02-15 - 2017-02-16" /></li>
+                        <li><label class="seach-label">收货人姓名：</label><input type="text" class="form-control" id="name"></li>
+                        <li><label class="seach-label">收货人手机：</label><input type="text" class="form-control" id="phone"></li>
+                        <li><label class="seach-label">会员卡卡号：</label><input type="text" class="form-control" id="cardNo"></li>
+                    </ul>
+                    <div id="seach" class="collapse">
+                        <ul class="clearfix">
+                            <li><label class="seach-label">订单号：</label><input type="text" class="form-control "></li>
+
+                            <li>
+                                <label class="seach-label">订单类型：</label><select class="form-control ">
+                                    <option>--请选择订单--</option>
+                                    <option>外卖订单</option>
+                                    <option>堂吃订单</option>
+                                    <option>预约订单</option>
+                                    <option>自提订单</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label class="seach-label">付款方式：</label><select class="form-control ">
+                                    <option>--请选择支付--</option>
+                                    <option>微信支付</option>
+                                    <option>支付宝支付</option>
+                                    <option>货到付款</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="seach_tigs_btn">
+                        <a href="javascript:void(0)" id="search" class="btn btn-primary">搜索</a>
+                        <a href='/site/Order/ExportExcel' class="btn btn-primary" id="ExportExcel">导出订单</a>
+                        <a href='/site/Order/ExportGoodExcel' class="btn btn-primary" id="ExportGoodExcel">导出菜品</a>
+                        <a href='javascript:void(0)' class="btn btn-primary" id="btnOrderAnalysis">发货分析</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12 col-md-12">
+                <input type="hidden" value="1" id="OrderStatus" />
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs nav_title" id="orderState">
+                    <li class=active><a data-toggle="tab" href="#complete" onclick="BindOder('1','1')" aria-expanded="true">待发货</a></li>
+                    <li ><a data-toggle="tab" href="#over" onclick="BindOder('2','1')" aria-expanded="true">已发货</a></li>
+                    <li ><a data-toggle="tab" href="#over" onclick="BindOder('4','1')" aria-expanded="true">已完成 </a> </li>
+                    <li ><a data-toggle="tab" href="#OrderList" onclick="BindOder('5','1')" aria-expanded="false">全部</a></li>
+                    <li ><a data-toggle="tab" href="#OrderList" onclick="BindOder('6','1')" aria-expanded="false">删除的订单</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="OrderListPost" class="tab-pane fade active in">
+
+                    </div>
+
+                    <div class="food-list-page clearfix" id="div_pager">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="tmpl_orders">
+    {{if msg.length > 0}}
+
+    {{each msg}}
+    <table class="table  table-bordered table-shadow">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    <span class="order-title"><i class="fa fa-home"></i>{{$value.store_name}}</span>
+                    <span class="order-title">
+                        {{if $value.order.eat_type == 1}}
+                        外卖
+                        {{else}}
+                        堂吃
+                        {{/if}}
+                    </span>
+                    <span class="order-title">流水号:{{$value.order.sn}}</span>
+                    
+                    <span class="order-title"><i class="glyphicon glyphicon-time"></i>{{$value.order.created_at}}</span>
+                    {{if !$value.ifDel}}
+                    <span class="order-title"><i class="glyphicon glyphicon-time"></i>订单删除时间:{{$value.order.deleted_at}}</span>
+                    {{/if}}
+                    {{if $value.order.delivery_distance && $value.order.delivery_distance > 0}}
+                    <span class="order-title">配送距离: {{$value.order.delivery_distance}}km</span>
+                    {{/if}}
+                    {{if $value.is_dubious}}
+                    <span class="order-title text-danger">可疑订单</span>
+                    {{/if}}
+                    {{if $value.order.discount > 0}}
+                    <!-- comment by yongz 临时去掉折扣，详细信息在订单详情页面显示
+                        <span class="order-title order-title-discount">{{$value.order.discount}}折</span>
+                    -->
+                    {{/if}}
+                    <span class="order-title order-title-discount">{{$value.order.member_activity_description}}</span>
+                    <span class="pull-right btn_list">
+                        <a onclick="select('/site/Order/OrderDetails?orderid={{$value.order.id}}')" href="javascript:void(0)">订单详情</a>
+                        {{if $value.ifDel}}
+                        <a href="javascript:void(0)" data-orderid="{{$value.order.id}}">删除订单</a>
+                        {{/if}}
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each $value.productList as value i}}
+            <tr>
+                <td width="40%">
+                    <a href="javascript:void(0)" class="foods-name {{ value.status == 0 ? 'foods-name-del':''}}">
+                        <img src="{{value.image_url}}">
+                        {{value.goodinfo_name}}
+                        {{if value.is_package == 1 && $value.packageDetailList.length > 0 }}
+                        <div class="alert alert-warning new-alert" role="alert">
+                            {{each $value.packageDetailList as pdValue j}}
+                            {{if pdValue.order_detail_id == value.id}}
+                            <span>{{pdValue.goodinfo_name}}</span>
+                            {{/if}}
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                        {{if value.attribute_name.length!=0}}
+                        <div class="alert alert-warning new-alert smallalert" role="alert">
+                            <span class="title">属性:</span>
+                            {{each value.attribute_name as attrName j}}
+                            <span>{{attrName}}</span>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                    </a>
+                </td>
+                <td width="12%" class="text-center">￥{{value.price}} x {{value.count}}</td>
+                {{if i == 0}}
+                <td rowspan="{{$value.productList.length}}" width="14%" class="text-center">
+                    <p>{{$value.order.name}}</p>
+                    <p>{{$value.order.phone}}</p>
+                    {{if $value.order.created_at.indexOf('2017-02-16') > -1}}
+                    <p>今天下单：第{{$value.today_times}}次</p>
+                    {{else }}
+                    <p>当天下单：第{{$value.today_times}}次</p>
+                    {{/if}}
+                    <p>总计下单：第{{$value.history_times}}次</p>
+                </td>
+                
+                
+                
+                {{if $value.order.status == "1" || $value.order.status == "0"}}
+                <td rowspan="{{$value.productList.length}}" width="16%" class="text-center">
+                    
+
+                    {{if $value.order.pay_type == 0}}
+                    <p>货到付款</p>
+                    {{else if $value.order.pay_type == 1}}
+                    <p>微信支付</p>
+                    {{else if $value.order.pay_type == 2}}
+                    <p>现金支付</p>
+                    {{else if $value.order.pay_type == 3}}
+                    <p>银行卡支付</p>
+                    {{else if $value.order.pay_type == 5}}
+                    <p>会员卡支付</p>
+                    {{else if $value.order.status == 4}}
+                    <p>餐后支付</p>
+                    {{/if}}
+
+                    {{if $value.order.eat_type == 1}}
+                    {{if $value.OrderEdit}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="UpdateStatus('2', '', '{{$value.order.id}}', '1')" type="button">发货</button>
+                    {{/if}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="RePrintOrder('{{$value.order.id}}')" type="button">重打订单</button>
+                    {{/if}}
+                    {{/if}}
+                    {{/if}}
+                    {{if $value.order.eat_type == 2}}
+                    {{if $value.OrderEdit}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="UpdateStatus('4', '确定完成流水号：{{$value.order.sn}}的定单吗？', '{{$value.order.id}}', '1')" type="button">完成</button>
+                    {{/if}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="RePrintOrder('{{$value.order.id}}')" type="button">重打订单</button>
+                    {{/if}}
+                    {{/if}}
+                    {{/if}}
+                </td>
+                {{else if $value.order.status == "2"}}
+                <td rowspan="{{$value.productList.length}}" width="16%" class="text-center">
+                    <p>已发货</p>
+                    {{if $value.OrderEdit}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="UpdateStatus('4', '', '{{$value.order.id}}', '2')" type="button">完成</button>
+                    {{/if}}
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="RePrintOrder('{{$value.order.id}}')" type="button">重打订单</button>
+                    {{/if}}
+                    {{/if}}
+                </td>
+                
+                {{else if $value.order.status == "4"}}
+                <td rowspan="{{$value.productList.length}}" width="16%" class="text-center">
+                    <p>已完成</p>
+                    {{if $value.ifDel}}
+                    <button class="btn btn-primary" onclick="RePrintOrder('{{$value.order.id}}')" type="button">重打订单</button>
+                    {{/if}}
+                </td>
+                {{/if}}
+                {{if $value.order.eat_type == 1 && $value.order.delivery_charge > 0}}
+                <td rowspan="{{$value.productList.length}}" width="14%" class="text-center">
+                    <h4 class="text-danger">￥{{$value.TotalAmount}}</h4>
+                    <span class="text-danger">(含配送费￥{{$value.deliveryCharge}})</span><br />
+                    {{if $value.order.is_pay}}
+                    <span class="text-danger" style="color: #f25500">已付款</span>
+                    {{/if}}
+                </td>
+                {{else}}
+                <td rowspan="{{$value.productList.length}}" width="14%" class="text-center">
+                    <h4 class="text-danger">￥{{$value.TotalAmount > 0 ? $value.TotalAmount : 0.01}}</h4>
+                    {{if $value.TotalAmount.toFloat() > 100}}
+                    <div class="text-danger">金额较大</div>
+                    {{/if}}
+                    {{if $value.order.is_pay}}
+                    <span class="text-danger" style="color: #f25500">已付款</span>
+                    {{else }}
+                    <span class="text-danger" style="color: #f25500">未付款</span>
+                    {{/if}}
+                </td>
+                {{/if}}
+                {{/if}}
+            </tr>
+            {{/each}}
+            {{if $value.order.invoice_title!=null && $value.order.invoice_title!=""}}
+            <tr>
+                <th class="order-Remarks" colspan="5">发票抬头：{{$value.order.invoice_title}}</th>
+            </tr>
+            {{/if}}
+            {{if $value.order.preset_time}}
+            <tr>
+                <th class="order-Remarks" colspan="5">预定时间：{{$value.order.preset_time}}&nbsp;({{$value.order.section_time}})</th>
+            </tr>
+            {{/if}}
+            <tr>
+                <th class="order-Remarks" colspan="5">备注：{{$value.order.remark}}</th>
+            </tr>
+        </tbody>
+    </table>
+    {{/each}}
+    {{else}}
+    <table class="table  table-bordered table-shadow">
+        <tbody>
+
+            <tr>
+                <td class="text-center"><div class="table-tigs">没有订单信息</div></td>
+            </tr>
+        </tbody>
+    </table>
+    {{/if}}
+</script>
+
+<link href="/site/Content/wdc/css/plugins/daterangepicker.css" rel="stylesheet" />
+<script src="/site/Content/wdc/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#reservation').daterangepicker(null, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+            ///ddddd
+        });
+    });
+</script>
+<div class="modal fade " id="printer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">打印机控联</h5>
+            </div>
+
+            <div class="modal-body TOP-Btns-modal">
+                <input type="hidden" id="orderId" />
+                <div class="form-group">
+                    <div class="demo-list" id="msg_no">
+                        <div class="pull-left"><input type="checkbox" id="input-1-1" name="print_check" value="1"><label for="input-1-1">总台联</label></div>
+                        <div class="pull-left"><input type="checkbox" id="input-2-1" name="print_check" value="2"><label for="input-2-1">厨房联</label></div>
+                        <div class="pull-left"><input type="checkbox" id="input-3-1" name="print_check" value="3"><label for="input-3-1">客户联</label></div>
+                        <div class="pull-left"><input type="checkbox" id="input-4-1" name="print_check" value="4"><label for="input-4-1">账单联</label></div>
+                        <div class="pull-left"><input type="checkbox" id="input-5-1" name="print_check" value="5"><label for="input-5-1">预定联</label></div>
+                        <div class="pull-left"><input type="checkbox" id="input-6-1" name="print_check" value="6"><label for="input-6-1">催单联</label></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-padding" id="reprinter">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+
+
+        <div class="footer">
+            <p>Copyright © 2011-2015 wodiancan.net All Rights Reserved</p>
+            <p>上海微淘营销策划有限公司版权所有<span style="margin-left:10px;">沪ICP备15045939号-2</span></p>
+
+            <span id="is_chrome">为了更好的使用效果请使用Chrome浏览器</span>
+        </div>
+        
+        <script>
+            var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            (function () {
+                if (!isChrome) {
+                    $("#is_chrome").html("为了更好的使用效果请使用Chrome浏览器");
+                }
+            })();
+        </script>
+        <!-- /#wrapper -->
+        <!-- icheck -->
+        <script type="text/javascript">
+            function clearLoginInfo() {
+                localStorage.clear();
+                sessionStorage.clear();
+            }
+            function exportSysstatisticsExcel(target) {
+                var href = $(target).attr("data-link"),
+                    token = appConfig.accessToken;
+                var dataParamStr = jQuery.getCondition();
+                dataParamStr.pageIndex = 1;
+                window.open(href + $.param(dataParamStr) + "&accesstoken=" + token);
+            }
+            //制保留2位小数，如：2，会在2后面补上00.即2.00
+            function toDecimal2(x) {
+                var f = parseFloat(x);
+                if (isNaN(f)) {
+                    return false;
+                }
+                var f = Math.round(x * 100) / 100;
+                var s = f.toString();
+                var rs = s.indexOf('.');
+                if (rs < 0) {
+                    rs = s.length;
+                    s += '.';
+                }
+                while (s.length <= rs + 2) {
+                    s += '0';
+                }
+                return s;
+            }
+            //页面模板格式化金额
+            template.helper('price', function (price, type) {
+                if (typeof price != 'undefined') {
+                    if (type == 'integer') {
+                        var arrayPrice = price.toString().split(".");
+                        return arrayPrice[0] ? arrayPrice[0] : "0";
+                    } else if (type == 'decimal') {
+                        return toDecimal2(price);
+                    }
+                } else {
+                    if (type == 'integer') {
+                        return "0";
+                    } else if (type == 'decimal') {
+                        return ".00";
+                    }
+                }
+            });
+        </script>
+    </body>
+
+
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>index.html</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<link href="../css/login.css" rel="stylesheet" type="text/css">
+<script src="../js/j.js" language="javascript" type="text/javascript"></script>
+<script src="../js/jquery-3.1.1.js"></script>
+<script src="../js/jquery/jquery.json-2.4.js"></script>
+<script src="../js/jquery-ui.js"></script>
+
+</head>
+
+<body>
+
+
+
+	<div class="container">
+			<div class="login-form">
+				<div class="form-item">
+					<div class="form-ctrl">
+						<input type="text" id="userMail" placeholder="请输入注册时使用的邮箱地址"
+							value="" class="form-control">
+					</div>
+					<div class="form-tips error" style="display: block;">请输入邮箱地址</div>
+				</div>
+				<div class="form-item box">
+					<div class="form-ctrl box-aw">
+						<input type="text" id="vCode" placeholder="验证码">
+					</div>
+					<div class="box form-v-code box-fr vertical">
+						<span class="v-code-img box-aw box"> <img id="img_vcode"
+							align="absmiddle" alt="..." src="/action/user/captcha"
+							data-pin-nopin="true">
+						</span>
+					</div>
+					<div class="form-tips"></div>
+				</div>
+				<div class="form-button form-item">
+					<button type="button" class="btn btn-primary btn-block btn-lg">
+						找回密码</button>
+					<div class="form-tips"></div>
+				</div>
+				<div class="text-center">
+					<a href="login" class="btn-link">转到登录页面?</a>
+				</div>
+		</div>
+	</div>
+
+</body>
+</html>
